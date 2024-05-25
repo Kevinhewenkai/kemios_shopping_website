@@ -12,41 +12,15 @@ import {
   Typography,
 } from "@mui/material";
 import { Add, Delete, Remove } from "@mui/icons-material";
-import { useState } from "react";
-import agent from "../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
 import BasketSummary from "./BasketSummary";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { removeItem, setBasket } from "./BasketSlice";
+import { addBasketItemAsync, removeBasketItemAsync } from "./BasketSlice";
 
 export default function BasketPage() {
-  const { basket } = useAppSelector((state) => state.basket);
+  const { basket, status } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState({
-    loading: false,
-    name: "",
-  });
-
-  function handleAddItem(productId: number, name: string) {
-    setLoading({ loading: true, name: name });
-    agent.Basket.addItem(productId)
-      .then((basket) => dispatch(setBasket(basket)))
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setLoading({ loading: false, name: name });
-      });
-  }
-
-  function handleRemoveItem(productId: number, quantity = 1, name: string) {
-    setLoading({ loading: true, name: name });
-    agent.Basket.removeItem(productId)
-      .then(() => dispatch(removeItem({ productId, quantity })))
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setLoading({ loading: false, name: name });
-      });
-  }
 
   if (!basket)
     return <Typography variant="h3">Your basket is empty</Typography>;
@@ -87,13 +61,16 @@ export default function BasketPage() {
                   <LoadingButton
                     color="error"
                     loading={
-                      loading.loading && loading.name === "rem" + item.productId
+                      status ===
+                      "pendingRemoveItem" + item?.productId + "remove"
                     }
                     onClick={() => {
-                      handleRemoveItem(
-                        item.productId,
-                        1,
-                        "rem" + item.productId
+                      dispatch(
+                        removeBasketItemAsync({
+                          productId: item.productId,
+                          quantity: 1,
+                          name: "remove",
+                        })
                       );
                     }}
                   >
@@ -102,11 +79,11 @@ export default function BasketPage() {
                   {item.quantity}
                   <LoadingButton
                     color="secondary"
-                    loading={
-                      loading.loading && loading.name === "add" + item.productId
-                    }
+                    loading={status === "pendingAddItem" + item?.productId}
                     onClick={() => {
-                      handleAddItem(item.productId, "add" + item.productId);
+                      dispatch(
+                        addBasketItemAsync({ productId: item.productId })
+                      );
                     }}
                   >
                     <Add />
@@ -118,14 +95,16 @@ export default function BasketPage() {
                 <TableCell align="right">
                   <LoadingButton
                     loading={
-                      loading.loading && loading.name === "del" + item.productId
+                      status === "pendingRemoveItem" + item?.productId + "del"
                     }
                     color="error"
                     onClick={() => {
-                      handleRemoveItem(
-                        item.productId,
-                        item.quantity,
-                        "del" + item.productId
+                      dispatch(
+                        removeBasketItemAsync({
+                          productId: item.productId,
+                          quantity: item.quantity,
+                          name: "del",
+                        })
                       );
                     }}
                   >
