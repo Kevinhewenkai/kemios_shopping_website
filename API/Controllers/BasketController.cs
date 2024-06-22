@@ -33,7 +33,7 @@ namespace API.Controllers
             if (basket == null) basket = CreateBasket();
             // get product
             var product = await _context.Products.FindAsync(productId);
-            if (product == null) return NotFound();
+            if (product == null) return BadRequest(new ProblemDetails{Title = "Product Not Found"});
             // add item
             basket.addItem(product, quantity);
             // save change
@@ -60,7 +60,9 @@ namespace API.Controllers
         private async Task<Basket> RetrieveBasket()
         {
             return await _context.Baskets
+                // basket.Items
                 .Include(i => i.Items)
+                // basket.Items.Product
                 .ThenInclude(p => p.Product)
                 .FirstOrDefaultAsync(b => b.BuyerId == Request.Cookies["buyerId"]);
         }
