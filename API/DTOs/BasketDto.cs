@@ -1,5 +1,6 @@
 using API.Entities;
 
+// DTO is used to shape the data returning
 namespace API.DTOs
 {
     public class BasketDto
