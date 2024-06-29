@@ -8,6 +8,8 @@ namespace API.Entities
         public int Id { get; set; }
         public string BuyerId { get; set; }
         public List<BasketItem> Items { get; set; } = new List<BasketItem>();
+        public string PaymentIntentId { get; set; }
+        public string ClientSecret { get; set; }
 
         public void addItem(Product product, int quantity)
         {

@@ -68,7 +68,7 @@ namespace API.Controllers
             }
             
             var subtotal = items.Sum(x => x.Price * x.Quantity);
-            var DeliveryFee = subtotal > 10000 ? 0 : 500;
+            var deliveryFee = subtotal > 10000 ? 0 : 500;
 
             var order = new Order
             {
@@ -76,7 +76,8 @@ namespace API.Controllers
                 BuyerId = User.Identity.Name,
                 ShippingAddress = orderDto.ShippingAddress,
                 SubTotal = subtotal,
-                DeliveryFee = DeliveryFee,
+                DeliveryFee = deliveryFee,
+                PaymentIntentId = basket.PaymentIntentId,
             };
 
             _context.Orders.Add(order);
