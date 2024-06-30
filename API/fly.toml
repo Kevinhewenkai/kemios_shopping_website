@@ -1,0 +1,27 @@
+# fly.toml app configuration file generated for api-small-field-6847 on 2024-06-30T18:26:44+10:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'api-small-field-6847'
+primary_region = 'syd'
+
+[build]
+  image = 'wenkaihe/kemios:latest'
+
+[env]
+  ASPNETCORE_URLS="http://+:8080"
+  StripeSettings__PublishableKey="pk_test_51PWqO5GfoWQq9mvgYDsfDoBofKmLu3K2ci07Dfa03bacEdZNsIUyrK7WZ59513WaaYOWJ77bosbgi0hJpAZfCDJM00L6bzKXss"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
