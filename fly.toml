@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for kemios on 2024-06-30T20:41:07+10:00
+# fly.toml app configuration file generated for kemios on 2024-07-01T12:40:00+10:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "kemios"
-primary_region = "syd"
+app = 'kemios'
+primary_region = 'syd'
 
 [build]
   image = 'wenkaihe/kemios:latest'
@@ -21,4 +21,9 @@ primary_region = "syd"
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
