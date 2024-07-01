@@ -9,7 +9,7 @@ Account for testing
 | admin|Pa$$w0rd|Admin |
 
 Techbologies used in this project include
-- \.net Core
+- \.NET Core
 - EF Core
 - Stripe
 - Cloudinary
